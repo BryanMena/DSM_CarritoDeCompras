@@ -1,4 +1,5 @@
 import java.util.Scanner
+import java.util.InputMismatchException
 
 data class Producto(val nombre: String, val precio: Double, var cantidadDisponible: Int)
 
@@ -65,21 +66,26 @@ fun main() {
     // Permitir al usuario seleccionar productos
     while (true) {
         println("Ingrese el número del producto que desea agregar al carrito (0 para salir):")
-        val opcion = scanner.nextInt()
-        if (opcion == 0) break
-        if (opcion < 1 || opcion > productosDisponibles.size) {
+        try {
+            val opcion = scanner.nextInt()
+            if (opcion == 0) break
+            if (opcion < 1 || opcion > productosDisponibles.size) {
+                println("Opción inválida. Por favor, ingrese un número válido.")
+                continue
+            }
+            val productoSeleccionado = productosDisponibles[opcion - 1]
+            println("Ingrese la cantidad:")
+            val cantidad = scanner.nextInt()
+            if (cantidad > productoSeleccionado.cantidadDisponible) {
+                println("No hay suficiente cantidad disponible.")
+                continue
+            }
+            carrito.agregarProducto(opcion, productoSeleccionado, cantidad)
+            println("Producto agregado al carrito.")
+        } catch (e: InputMismatchException) {
             println("Opción inválida. Por favor, ingrese un número válido.")
-            continue
+            scanner.nextLine() 
         }
-        val productoSeleccionado = productosDisponibles[opcion - 1]
-        println("Ingrese la cantidad:")
-        val cantidad = scanner.nextInt()
-        if (cantidad > productoSeleccionado.cantidadDisponible) {
-            println("No hay suficiente cantidad disponible.")
-            continue
-        }
-        carrito.agregarProducto(opcion, productoSeleccionado, cantidad)
-        println("Producto agregado al carrito.")
     }
 
     // Mostrar carrito de compras
