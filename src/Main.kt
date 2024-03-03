@@ -1,31 +1,45 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 import java.util.Scanner
 
 data class Producto(val nombre: String, val precio: Double, var cantidadDisponible: Int)
 
 class CarritoDeCompras {
-    private val productosEnCarrito = mutableMapOf<Producto, Int>()
+    private val productosEnCarrito = mutableMapOf<Int, Producto>()
+    private val cantidades = mutableMapOf<Producto, Int>()
 
-    fun agregarProducto(producto: Producto, cantidad: Int) {
-        productosEnCarrito[producto] = productosEnCarrito.getOrDefault(producto, 0) + cantidad
+    fun agregarProducto(numeroProducto: Int, producto: Producto, cantidad: Int) {
+        productosEnCarrito[numeroProducto] = producto
+        cantidades[producto] = cantidad
     }
 
-    fun eliminarProducto(producto: Producto) {
-        productosEnCarrito.remove(producto)
-    }
-
-    fun mostrarCarrito() {
-        println("---- Carrito de Compras ----")
-        productosEnCarrito.forEach { (producto, cantidad) ->
-            println("${producto.nombre} - Cantidad: $cantidad - Precio Unitario: ${producto.precio} - Precio Total: ${producto.precio * cantidad}")
+    fun eliminarProducto(numeroProducto: Int) {
+        val productoAEliminar = productosEnCarrito.remove(numeroProducto)
+        if (productoAEliminar != null) {
+            cantidades.remove(productoAEliminar)
+            println("${productoAEliminar.nombre} ha sido eliminado del carrito.")
+        } else {
+            println("El número de producto \"$numeroProducto\" no se encontró en el carrito.")
         }
-        println("Total: ${calcularTotal()}")
+    }
+
+    fun mostrarCarrito(): String {
+        val carritoString = StringBuilder()
+        carritoString.append("---- Carrito de Compras ----\n")
+        if (productosEnCarrito.isNotEmpty()) {
+            productosEnCarrito.forEach { (numeroProducto, producto) ->
+                val cantidad = cantidades[producto] ?: 0
+                carritoString.append("$numeroProducto. ${producto.nombre} - Cantidad: $cantidad - Precio Unitario: ${producto.precio} - Precio Total: ${producto.precio * cantidad}\n")
+            }
+            carritoString.append("Total: ${calcularTotal()}")
+        } else {
+            carritoString.append("El carrito está vacío.")
+        }
+        return carritoString.toString()
     }
 
     private fun calcularTotal(): Double {
         var total = 0.0
-        productosEnCarrito.forEach { (producto, cantidad) ->
+        productosEnCarrito.forEach { (_, producto) ->
+            val cantidad = cantidades[producto] ?: 0
             total += producto.precio * cantidad
         }
         return total
@@ -64,21 +78,37 @@ fun main() {
             println("No hay suficiente cantidad disponible.")
             continue
         }
-        carrito.agregarProducto(productoSeleccionado, cantidad)
+        carrito.agregarProducto(opcion, productoSeleccionado, cantidad)
         println("Producto agregado al carrito.")
     }
 
     // Mostrar carrito de compras
-    carrito.mostrarCarrito()
+    val carritoMostrado = carrito.mostrarCarrito()
+    println(carritoMostrado)
 
-    // Confirmar la compra y generar factura
-    println("¿Desea confirmar la compra? (Sí/No):")
-    val confirmacion = scanner.next()
-    if (confirmacion.equals("Sí", ignoreCase = true)) {
-        println("---- Factura ----")
-        carrito.mostrarCarrito()
-        println("Gracias por su compra!")
+    // Eliminar producto del carrito
+    println("¿Desea eliminar algún producto del carrito? (Sí/No):")
+    val eliminarProducto = scanner.next().toLowerCase()
+    if (eliminarProducto == "si" || eliminarProducto == "sí") {
+        println("Ingrese el número del producto que desea eliminar:")
+        val numeroProductoEliminar = scanner.nextInt()
+        carrito.eliminarProducto(numeroProductoEliminar)
+        // Mostrar el carrito actualizado después de eliminar el producto
+        println(carrito.mostrarCarrito())
+    }
+
+    // Confirmar la compra y generar factura si hay productos en el carrito
+    if (carrito.mostrarCarrito() != "El carrito está vacío.") {
+        println("¿Desea confirmar la compra? (Sí/No):")
+        val confirmacion = scanner.next().toLowerCase()
+        if (confirmacion == "si" || eliminarProducto == "sí") {
+            println("---- Factura ----")
+            println(carrito.mostrarCarrito())
+            println("Gracias por su compra!")
+        } else {
+            println("Compra cancelada. Gracias por visitarnos!")
+        }
     } else {
-        println("Compra cancelada. Gracias por visitarnos!")
+        println("Gracias por visitarnos!")
     }
 }
