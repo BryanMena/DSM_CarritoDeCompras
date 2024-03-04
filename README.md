@@ -14,7 +14,7 @@ Proyecto de carrito de compras elaborado con Kotlin, para la materia de DSM.
 - Miriam Janeth Villeda Lopez - VL191443
 
 ## Enlaces
-[Documento](https://github.com/BryanMena/DSM_CarritoDeCompras)
+[Documento](https://drive.google.com/file/d/1V6UNNf7s7Gito6EKMxUVvmA3vtNktn4j/view?usp=sharing)
 
 [Código Fuente](https://github.com/BryanMena/DSM_CarritoDeCompras)
 
