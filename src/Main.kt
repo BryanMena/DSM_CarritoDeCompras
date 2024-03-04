@@ -57,78 +57,91 @@ fun main() {
         Producto("Mouse inalámbrico", 49.99, 8)
     )
 
-    // Mostrar lista de productos disponibles
-    println("---- Productos Disponibles ----")
-    productosDisponibles.forEachIndexed { index, producto ->
-        println("${index + 1}. ${producto.nombre} - Precio: ${producto.precio} - Cantidad Disponible: ${producto.cantidadDisponible}")
-    }
+    var salir = "si"
+    // Permitir al usuario seguir comprando después de ver la factura.
+    while (salir != "no") {
 
-    // Permitir al usuario seleccionar productos
-    while (true) {
-        println("Ingrese el número del producto que desea agregar al carrito (0 para salir):")
-        try {
-            val opcion = scanner.nextInt()
-            if (opcion == 0) break
-            if (opcion < 1 || opcion > productosDisponibles.size) {
-                println("Opción inválida. Por favor, ingrese un número válido.")
-                continue
-            }
-            val productoSeleccionado = productosDisponibles[opcion - 1]
-            println("Ingrese la cantidad:")
-            val cantidad = scanner.nextInt()
-            if (cantidad > productoSeleccionado.cantidadDisponible) {
-                println("No hay suficiente cantidad disponible.")
-                continue
-            }
-            carrito.agregarProducto(opcion, productoSeleccionado, cantidad)
-            println("Producto agregado al carrito.")
-        } catch (e: InputMismatchException) {
-            println("Opción inválida. Por favor, ingrese un número válido.")
-            scanner.nextLine() 
+        // Mostrar lista de productos disponibles
+        println("---- Productos Disponibles ----")
+        productosDisponibles.forEachIndexed { index, producto ->
+            println("${index + 1}. ${producto.nombre} - Precio: ${producto.precio} - Cantidad Disponible: ${producto.cantidadDisponible}")
         }
-    }
 
-    // Mostrar carrito de compras
-    val carritoMostrado = carrito.mostrarCarrito()
-    println(carritoMostrado)
-
-    // Eliminar producto del carrito
-    var eliminarProducto: String
-    while(true) {
-        println("¿Desea eliminar algún producto del carrito? (Si/No) (0 para salir):")
-        eliminarProducto = scanner.next().toLowerCase()
-        if (eliminarProducto == "0") break
-
-        if (eliminarProducto == "si") {
-            println("Ingrese el número del producto que desea eliminar:")
+        // Permitir al usuario seleccionar productos
+        while (true) {
+            println("Ingrese el número del producto que desea agregar al carrito (0 para salir):")
             try {
-                val numeroProductoEliminar = scanner.nextInt()
-                carrito.eliminarProducto(numeroProductoEliminar)
+                val opcion = scanner.nextInt()
+                if (opcion == 0) break
+                if (opcion < 1 || opcion > productosDisponibles.size) {
+                    println("Opción inválida. Por favor, ingrese un número válido.")
+                    continue
+                }
+                val productoSeleccionado = productosDisponibles[opcion - 1]
+                println("Ingrese la cantidad:")
+                val cantidad = scanner.nextInt()
+                if (cantidad > productoSeleccionado.cantidadDisponible) {
+                    println("No hay suficiente cantidad disponible.")
+                    continue
+                }
+                carrito.agregarProducto(opcion, productoSeleccionado, cantidad)
+                println("Producto agregado al carrito.")
             } catch (e: InputMismatchException) {
                 println("Opción inválida. Por favor, ingrese un número válido.")
                 scanner.nextLine() 
-            }            
-            continue
-        } else if (eliminarProducto == "no") {
+            }
+        }
+
+        // Mostrar carrito de compras
+        val carritoMostrado = carrito.mostrarCarrito()
+        println(carritoMostrado)
+
+        // Eliminar producto del carrito
+        var eliminarProducto: String
+        while(true) {
+            println("¿Desea eliminar algún producto del carrito? (Si/No) (0 para salir):")
+            eliminarProducto = scanner.next().toLowerCase()
+            if (eliminarProducto == "0") break
+
+            if (eliminarProducto == "si") {
+                println("Ingrese el número del producto que desea eliminar:")
+                try {
+                    val numeroProductoEliminar = scanner.nextInt()
+                    carrito.eliminarProducto(numeroProductoEliminar)
+                } catch (e: InputMismatchException) {
+                    println("Opción inválida. Por favor, ingrese un número válido.")
+                    scanner.nextLine() 
+                }            
+                continue
+            } else if (eliminarProducto == "no") {
+                break
+            } else {
+                println("Opción inválida. Por favor, ingrese \"Si\" o \"No\".")
+            }
+        }
+
+
+        // Confirmar la compra y generar factura si hay productos en el carrito
+        if (carrito.mostrarCarrito() != "El carrito está vacío.") {
+            println("¿Desea confirmar la compra? (Sí/No):")
+            val confirmacion = scanner.next().toLowerCase()
+            if (confirmacion == "si" || eliminarProducto == "sí") {
+                println("---- Factura ----")
+                println(carrito.mostrarCarrito())
+                println("Gracias por su compra!")
+                println("¿Desea seguir comprando? (Sí/No):")
+                salir = scanner.next().toLowerCase()
+                if (salir == "no") break
+                if (salir != "si") {
+                    println("Opción inválida. Por favor, ingrese \"Sí\" o \"No\".")
+                }
+            } else {
+                println("Compra cancelada. Gracias por visitarnos!")
+                break
+            }
+        } else {
+            println("Gracias por visitarnos!")
             break
-        } else {
-            println("Opción inválida. Por favor, ingrese \"Si\" o \"No\".")
         }
-    }
-
-
-    // Confirmar la compra y generar factura si hay productos en el carrito
-    if (carrito.mostrarCarrito() != "El carrito está vacío.") {
-        println("¿Desea confirmar la compra? (Sí/No):")
-        val confirmacion = scanner.next().toLowerCase()
-        if (confirmacion == "si" || eliminarProducto == "sí") {
-            println("---- Factura ----")
-            println(carrito.mostrarCarrito())
-            println("Gracias por su compra!")
-        } else {
-            println("Compra cancelada. Gracias por visitarnos!")
-        }
-    } else {
-        println("Gracias por visitarnos!")
     }
 }
