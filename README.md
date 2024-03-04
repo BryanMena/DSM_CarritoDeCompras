@@ -18,4 +18,4 @@ Proyecto de carrito de compras elaborado con Kotlin, para la materia de DSM.
 
 [Código Fuente](https://github.com/BryanMena/DSM_CarritoDeCompras)
 
-[Enlace de video](https://github.com/BryanMena/DSM_CarritoDeCompras)
+[Enlace de video](https://drive.google.com/file/d/1zByKbOdC79G08vkciK7AVVzYRf_n7OkD/view?usp=sharing)
