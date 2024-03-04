@@ -100,7 +100,7 @@ fun main() {
         var eliminarProducto: String
         while(true) {
             println("¿Desea eliminar algún producto del carrito? (Si/No) (0 para salir):")
-            eliminarProducto = scanner.next().toLowerCase()
+            eliminarProducto = scanner.next().lowercase()
             if (eliminarProducto == "0") break
 
             if (eliminarProducto == "si") {
@@ -124,13 +124,13 @@ fun main() {
         // Confirmar la compra y generar factura si hay productos en el carrito
         if (carrito.mostrarCarrito() != "El carrito está vacío.") {
             println("¿Desea confirmar la compra? (Sí/No):")
-            val confirmacion = scanner.next().toLowerCase()
+            val confirmacion = scanner.next().lowercase()
             if (confirmacion == "si" || eliminarProducto == "sí") {
                 println("---- Factura ----")
                 println(carrito.mostrarCarrito())
                 println("Gracias por su compra!")
                 println("¿Desea seguir comprando? (Sí/No):")
-                salir = scanner.next().toLowerCase()
+                salir = scanner.next().lowercase()
                 if (salir == "no") break
                 if (salir != "si") {
                     println("Opción inválida. Por favor, ingrese \"Sí\" o \"No\".")
