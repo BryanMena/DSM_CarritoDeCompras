@@ -93,15 +93,29 @@ fun main() {
     println(carritoMostrado)
 
     // Eliminar producto del carrito
-    println("¿Desea eliminar algún producto del carrito? (Sí/No):")
-    val eliminarProducto = scanner.next().toLowerCase()
-    if (eliminarProducto == "si" || eliminarProducto == "sí") {
-        println("Ingrese el número del producto que desea eliminar:")
-        val numeroProductoEliminar = scanner.nextInt()
-        carrito.eliminarProducto(numeroProductoEliminar)
-        // Mostrar el carrito actualizado después de eliminar el producto
-        println(carrito.mostrarCarrito())
+    var eliminarProducto: String
+    while(true) {
+        println("¿Desea eliminar algún producto del carrito? (Si/No) (0 para salir):")
+        eliminarProducto = scanner.next().toLowerCase()
+        if (eliminarProducto == "0") break
+
+        if (eliminarProducto == "si") {
+            println("Ingrese el número del producto que desea eliminar:")
+            try {
+                val numeroProductoEliminar = scanner.nextInt()
+                carrito.eliminarProducto(numeroProductoEliminar)
+            } catch (e: InputMismatchException) {
+                println("Opción inválida. Por favor, ingrese un número válido.")
+                scanner.nextLine() 
+            }            
+            continue
+        } else if (eliminarProducto == "no") {
+            break
+        } else {
+            println("Opción inválida. Por favor, ingrese \"Si\" o \"No\".")
+        }
     }
+
 
     // Confirmar la compra y generar factura si hay productos en el carrito
     if (carrito.mostrarCarrito() != "El carrito está vacío.") {
